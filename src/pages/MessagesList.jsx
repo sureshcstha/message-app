@@ -57,7 +57,7 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
           {/* "All" category button */}
           <li
             onClick={() => handleCategoryClick('all')}
-            className={`cursor-pointer ${activeCategory === 'All' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'} px-4 py-2 rounded-lg`}
+            className={`cursor-pointer ${activeCategory === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'} px-4 py-2 rounded-lg`}
           >
             all
           </li>
