@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollToTopButton from '../components/ScrollToTopButton';
+import ConfirmationModal from '../components/ConfirmationModal';
+import { toast } from 'react-toastify';
 
 const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory  }) => {
   const [activeCategory, setActiveCategory] = useState(null);
   const [copiedMessageId, setCopiedMessageId] = useState(null); // Store the copied message's ID
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [messageToDelete, setMessageToDelete] = useState(null);
 
   useEffect(() => {
     fetchAllMessages();
@@ -18,6 +22,28 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
       fetchMessagesByCategory(category); // Fetch messages for the selected category
     }
     setActiveCategory(category);
+  };
+
+  const openModal = (messageId) => {
+    setMessageToDelete(messageId);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = () => {
+    if (messageToDelete) {
+      deleteMessage(messageToDelete);
+      toast.success('Message deleted successfully.', {
+        position: 'top-right',
+        autoClose: 5000,
+      });
+    }
+    setIsModalOpen(false);
+    setMessageToDelete(null);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setMessageToDelete(null);
   };
 
   // Function to capitalize the first letter of the category
@@ -85,7 +111,7 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
                   Edit
                 </Link>
                 <button
-                  onClick={() => deleteMessage(message._id)}
+                  onClick={() => openModal(message._id)}
                   className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
                 >
                   Delete
@@ -106,6 +132,14 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
 
       {/* Scroll to Top Button */}
       <ScrollToTopButton />
+
+      {/* Modal Component */}
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onConfirm={handleDelete}
+        onCancel={handleCancel}
+        title="Are you sure you want to delete this message?"
+      />
     </div>
   );
 };

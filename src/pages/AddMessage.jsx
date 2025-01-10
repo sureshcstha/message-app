@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const AddMessage = ({ categories, fetchCategories, createMessage }) => {
 
   const [messageText, setMessageText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     fetchCategories();
@@ -12,9 +14,12 @@ const AddMessage = ({ categories, fetchCategories, createMessage }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Reset any previous error messages
+    setErrorMessage('');
   
     if (!messageText.trim() || !selectedCategory) {
-      alert('Please enter a message text and select a category');
+      setErrorMessage('Please enter a message text and select a category.');
       return;
     }
   
@@ -24,16 +29,15 @@ const AddMessage = ({ categories, fetchCategories, createMessage }) => {
     };
 
     setIsLoading(true);
-  
-    // console.log('Submitting payload:', newMessage);
+
   
     try {
       await createMessage(newMessage);
-      alert('Message added successfully!');
+      toast.success('Message added successfully!');
       setMessageText('');
       setSelectedCategory('');
     } catch (error) {
-      alert('Failed to add message. Check console for details.');
+      setErrorMessage('Failed to add message. Please try again.');
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
@@ -43,6 +47,9 @@ const AddMessage = ({ categories, fetchCategories, createMessage }) => {
   return (
     <div className="p-4 max-w-md mx-auto bg-white shadow-md rounded-md pt-28">
       <h1 className="text-xl font-bold mb-4">Add New Message</h1>
+      {errorMessage && (
+        <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
+      )}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="messageText">
