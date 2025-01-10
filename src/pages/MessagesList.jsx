@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import ScrollToTopButton from '../components/ScrollToTopButton';
 
 const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory  }) => {
   const [activeCategory, setActiveCategory] = useState(null);
   const [copiedMessageId, setCopiedMessageId] = useState(null); // Store the copied message's ID
+  const [showScrollTop, setShowScrollTop] = useState(false); // State for scroll-to-top button visibility
 
   useEffect(() => {
     fetchAllMessages();
@@ -32,6 +34,10 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
         setTimeout(() => setCopiedMessageId(null), 2000); // Reset copied state after 2 seconds
       })
       .catch((err) => console.error('Failed to copy text: ', err));
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -102,6 +108,9 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
           </li>
         ))}
       </ul>
+
+      {/* Scroll to Top Button */}
+      <ScrollToTopButton />
     </div>
   );
 };
