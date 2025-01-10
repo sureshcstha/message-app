@@ -1,10 +1,26 @@
-function App() {
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import MainLayout from './layouts/MainLayout';
+import MessagesList from './pages/MessagesList';
+import AddMessage from './pages/AddMessage';
+import EditMessage from './pages/EditMessage';
+import NotFoundPage from './pages/NotFoundPage';
+import useMessages from './hooks/useMessages';
+
+const App = () => {
+  const messageAPI = useMessages();
 
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-  )
-}
+    <Router>
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<MessagesList {...messageAPI} />} />
+          <Route path="/add" element={<AddMessage {...messageAPI} />} />
+          <Route path="/edit/:id" element={<EditMessage {...messageAPI} />} />
+        </Route>
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Router>
+  );
+};
 
-export default App
+export default App;
