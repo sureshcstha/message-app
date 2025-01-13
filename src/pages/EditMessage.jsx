@@ -1,31 +1,38 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-const EditMessage = ({ messageId, categories, fetchCategories, updateMessage, fetchMessage }) => {
+const EditMessage = ({ fetchMessageById, categories, fetchCategories, updateMessage }) => {
+  const { messageId } = useParams(); // Get messageId from the URL
   const [messageText, setMessageText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    fetchCategories();
-    if (messageId) {
-      fetchMessage(messageId);
-    }
-  }, [fetchCategories, fetchMessage, messageId]);
+    fetchCategories(); // Fetch categories on component mount
 
-  useEffect(() => {
-    if (messageId) {
-      // Assuming fetchMessage returns the message data
-      const message = fetchMessage(messageId);
-      setMessageText(message.message || '');
-      setSelectedCategory(message.category || '');
-    }
-  }, [messageId]);
+    const fetchMessage = async () => {
+      try {
+        const message = await fetchMessageById(messageId); // Fetch message by ID
+        setMessageText(message.message || ''); // Set message text
+        setSelectedCategory(message.category || ''); // Set category
+      } catch (error) {
+        console.error(`Error fetching message with ID "${messageId}":`, error);
+      }
+    };
+
+    if (messageId) fetchMessage();
+  }, [fetchCategories, fetchMessageById, messageId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Reset any previous error messages
+    setErrorMessage('');
+
     if (!messageText.trim() || !selectedCategory) {
-      alert('Please enter a message text and select a category');
+      setErrorMessage('Please enter a message text and select a category.');
       return;
     }
 
@@ -38,11 +45,11 @@ const EditMessage = ({ messageId, categories, fetchCategories, updateMessage, fe
 
     try {
       await updateMessage(messageId, updatedMessage);
-      alert('Message updated successfully!');
+      toast.success('Message updated successfully!');
       setMessageText('');
       setSelectedCategory('');
     } catch (error) {
-      alert('Failed to update message. Check console for details.');
+      setErrorMessage('Failed to add message. Please try again.');
       console.error('Error:', error);
     } finally {
       setIsLoading(false);
@@ -52,6 +59,9 @@ const EditMessage = ({ messageId, categories, fetchCategories, updateMessage, fe
   return (
     <div className="p-4 max-w-md mx-auto bg-white shadow-md rounded-md pt-28">
       <h1 className="text-xl font-bold mb-4">Edit Message</h1>
+      {errorMessage && (
+        <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
+      )}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="messageText">

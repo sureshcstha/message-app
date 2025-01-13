@@ -76,6 +76,16 @@ const useMessages = () => {
     }
   }, [fetchAllMessages]);
 
+  // Fetch an existing message by ID
+  const fetchMessageById = useCallback(async (messageId) => {
+    try {
+      const message = await fetchData(`${API_BASE_URL}/messages/message/${messageId}`);
+      return message.data;
+    } catch (error) {
+      console.error(`Error fetching message with ID "${messageId}":`, error);
+    }
+  }, []);
+
   // Update message
   const updateMessage = useCallback(async (id, updatedMessage) => {
     try {
@@ -102,7 +112,7 @@ const useMessages = () => {
     }
   }, [fetchAllMessages]);
 
-  return { messages, fetchAllMessages, categories, fetchCategories, fetchMessagesByCategory, fetchRandomMessage, createMessage, updateMessage, deleteMessage };
+  return { messages, fetchAllMessages, categories, fetchCategories, fetchMessagesByCategory, fetchRandomMessage, createMessage, fetchMessageById, updateMessage, deleteMessage };
 };
 
 export default useMessages;

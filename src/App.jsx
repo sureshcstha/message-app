@@ -15,7 +15,7 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route path="/" element={<MessagesList {...messageAPI} />} />
           <Route path="/add" element={<AddMessage {...messageAPI} />} />
-          <Route path="/edit/:id" element={<EditMessage {...messageAPI} />} />
+          <Route path="/edit/:messageId" element={<EditMessage {...messageAPI} />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
