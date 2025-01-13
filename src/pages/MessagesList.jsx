@@ -1,18 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollToTopButton from '../components/ScrollToTopButton';
 import ConfirmationModal from '../components/ConfirmationModal';
+import MessageCard from '../components/MessageCard';
+import CategoryList from '../components/CategoryList';
 import { toast } from 'react-toastify';
+import { capitalize } from '../utils/helpers';
 
 const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory  }) => {
   const [activeCategory, setActiveCategory] = useState(null);
   const [copiedMessageId, setCopiedMessageId] = useState(null); // Store the copied message's ID
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchAllMessages();
-    fetchCategories();
+    const fetchData = async () => {
+      try {
+        // Wait for both fetch operations to complete
+        await Promise.all([fetchAllMessages(), fetchCategories()]);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false); // Set loading to false after completion
+      }
+    };
+  
+    fetchData();
   }, [fetchAllMessages, fetchCategories]);
 
   const handleCategoryClick = (category) => {
@@ -37,19 +51,12 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
         autoClose: 5000,
       });
     }
-    setIsModalOpen(false);
-    setMessageToDelete(null);
+    handleModalClose();
   };
 
-  const handleCancel = () => {
+  const handleModalClose = () => {
     setIsModalOpen(false);
     setMessageToDelete(null);
-  };
-
-  // Function to capitalize the first letter of the category
-  const capitalize = (category) => {
-    if (!category) return '';
-    return category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
   };
 
   const handleCopy = (message, messageId) => {
@@ -60,6 +67,16 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
       })
       .catch((err) => console.error('Failed to copy text: ', err));
   };
+
+  const categoryHeading = useMemo(() => {
+    return activeCategory && activeCategory !== 'all'
+      ? `${capitalize(activeCategory)} Messages`
+      : 'All Messages';
+  }, [activeCategory]);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="container mx-auto p-4 pt-24">
@@ -74,61 +91,35 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
       
       <div className="mb-6">
         <h2 className="text-xl font-semibold">Categories</h2>
-        <ul className="flex flex-wrap gap-2 mt-2">
-          {/* "All" category button */}
-          <li
-            onClick={() => handleCategoryClick('all')}
-            className={`cursor-pointer ${activeCategory === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'} px-4 py-2 rounded-lg`}
-          >
-            all
-          </li>
-          {/* Category buttons */}
-          {categories.map((category, index) => (
-            <li key={index} value={category} onClick={() => handleCategoryClick(category)} className={`cursor-pointer ${activeCategory === category ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'} px-4 py-2 rounded-lg`}>
-              {category}
-            </li>
-          ))}
-        </ul>
+        {categories.length > 0 ? (
+          <CategoryList
+            categories={categories}
+            activeCategory={activeCategory}
+            handleClick={handleCategoryClick}
+          />
+        ) : (
+          <p className="text-gray-500 italic">No categories available.</p>
+        )}
       </div>
 
       <h1 className="text-2xl font-semibold mb-6">
-        {activeCategory && activeCategory !== 'All' ? `${capitalize(activeCategory)} Messages` : 'All Messages'}
+        {categoryHeading}
       </h1>
+      {messages.length > 0 ? (
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {messages.map((message) => (
-          <li
+          <MessageCard
             key={message._id}
-            className="bg-white p-4 rounded-lg shadow-md flex flex-col space-y-4"
-          >
-            <p className="text-lg">{message.message}</p>
-
-            <div className="flex justify-between items-center">
-              <div className="flex space-x-4">
-                <Link
-                  to={`/edit/${message._id}`}
-                  className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600"
-                >
-                  Edit
-                </Link>
-                <button
-                  onClick={() => openModal(message._id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                >
-                  Delete
-                </button>
-
-              </div>
-              
-              <button
-                onClick={() => handleCopy(message.message, message._id)}
-                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-              >
-                {copiedMessageId === message._id ? 'Copied!' : 'Copy'}
-              </button>
-            </div>
-          </li>
+            message={message}
+            copiedMessageId={copiedMessageId}
+            openModal={openModal}
+            handleCopy={handleCopy}
+        />
         ))}
       </ul>
+      ) : (
+        <p className="text-gray-500 italic">No messages found for this category.</p>
+      )}
 
       {/* Scroll to Top Button */}
       <ScrollToTopButton />
@@ -137,7 +128,7 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
       <ConfirmationModal
         isOpen={isModalOpen}
         onConfirm={handleDelete}
-        onCancel={handleCancel}
+        onCancel={handleModalClose}
         title="Are you sure you want to delete this message?"
       />
     </div>
