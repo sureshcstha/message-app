@@ -75,7 +75,12 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
   }, [activeCategory]);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="container mx-auto p-4 pt-24">
+        <p>Loading...</p>
+        <p>Server spins down on idle. Spinning up may take up to a minute, which causes a noticeable delay for incoming requests until the service is back up and running.</p>
+      </div>
+    );
   }
 
   return (
