@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const AddMessage = ({ categories, fetchCategories, createMessage }) => {
 
@@ -45,51 +47,63 @@ const AddMessage = ({ categories, fetchCategories, createMessage }) => {
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto bg-white shadow-md rounded-md pt-28">
-      <h1 className="text-xl font-bold mb-4">Add New Message</h1>
-      {errorMessage && (
-        <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
-      )}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="messageText">
-            Message Text
-          </label>
-          <textarea
-            id="messageText"
-            value={messageText}
-            onChange={(e) => setMessageText(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md"
-            rows="4"
-            placeholder="Enter your message here..."
-          ></textarea>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 mb-2" htmlFor="category">
-            Category
-          </label>
-          <select
-            id="category"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md"
+    <div className='pt-20'>
+      <section>
+        <div className='container m-auto py-6 px-6'>
+          <Link
+            to='/'
+            className='text-indigo-500 hover:text-indigo-600 flex items-center'
           >
-            <option value="">Select a category</option>
-            {categories.map((category, index) => (
-              <option key={index} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+            <FaArrowLeft className='mr-2' />Go Back 
+          </Link>
         </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Submitting...' : 'Add Message'}
-        </button>
-      </form>
+      </section>
+      <div className="p-4 max-w-md mx-auto bg-white shadow-md rounded-md">
+        <h1 className="text-xl font-bold mb-4">Add New Message</h1>
+        {errorMessage && (
+          <div className="text-red-500 text-sm mb-4">{errorMessage}</div>
+        )}
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2" htmlFor="messageText">
+              Message Text
+            </label>
+            <textarea
+              id="messageText"
+              value={messageText}
+              onChange={(e) => setMessageText(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              rows="4"
+              placeholder="Enter your message here..."
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 mb-2" htmlFor="category">
+              Category
+            </label>
+            <select
+              id="category"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md"
+            >
+              <option value="">Select a category</option>
+              {categories.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Submitting...' : 'Add Message'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
