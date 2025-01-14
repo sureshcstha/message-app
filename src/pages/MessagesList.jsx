@@ -93,6 +93,12 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
         >
           Add New Message
         </Link>
+        <Link
+          to="/random-message"
+          className="bg-blue-500 text-white px-3 py-1 text-sm rounded-lg hover:bg-blue-600"
+        >
+          Get Random Message
+        </Link>
       </div>
       
       <div className="mb-6">
