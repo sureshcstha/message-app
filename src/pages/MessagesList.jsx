@@ -6,6 +6,7 @@ import MessageCard from '../components/MessageCard';
 import CategoryList from '../components/CategoryList';
 import { toast } from 'react-toastify';
 import { capitalize } from '../utils/helpers';
+import Spinner from '../components/Spinner';
 
 const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory  }) => {
   const [activeCategory, setActiveCategory] = useState(null);
@@ -76,9 +77,9 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
 
   if (isLoading) {
     return (
-      <div className="container mx-auto p-4 pt-24">
-        <p>Loading...</p>
-        <p>Server spins down on idle. Spinning up may take up to a minute, which causes a noticeable delay for incoming requests until the service is back up and running.</p>
+      <div className="flex flex-col items-center justify-center h-screen">
+        <Spinner />
+        <p className="mt-4 text-gray-500">Loading messages, please wait...</p>
       </div>
     );
   }
