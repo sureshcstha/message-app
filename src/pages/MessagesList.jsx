@@ -30,7 +30,7 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
     };
   
     fetchData();
-  }, [fetchAllMessages, fetchCategories]);
+  }, [fetchAllMessages, fetchCategories, activeCategory]);
 
   const handleCategoryClick = (category) => {
     if (category === 'all') {
