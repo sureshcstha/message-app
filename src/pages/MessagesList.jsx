@@ -9,7 +9,9 @@ import { capitalize } from '../utils/helpers';
 import Spinner from '../components/Spinner';
 
 const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory  }) => {
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [activeCategory, setActiveCategory] = useState(() => {
+    return localStorage.getItem('activeCategory') || 'all'; // Default to 'all' if no value in local storage
+  });
   const [copiedMessageId, setCopiedMessageId] = useState(null); // Store the copied message's ID
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState(null);
@@ -21,6 +23,8 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
         await Promise.all([fetchCategories()]);
         if (activeCategory === 'all') {
           await fetchAllMessages();
+        } else {
+          await fetchMessagesByCategory(activeCategory);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -30,7 +34,7 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
     };
   
     fetchData();
-  }, [fetchAllMessages, fetchCategories, activeCategory]);
+  }, [fetchAllMessages, fetchCategories, activeCategory, fetchMessagesByCategory]);
 
   const handleCategoryClick = (category) => {
     if (category === 'all') {
@@ -39,6 +43,7 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
       fetchMessagesByCategory(category); // Fetch messages for the selected category
     }
     setActiveCategory(category);
+    localStorage.setItem('activeCategory', category); // Save category to local storage
   };
 
   const openModal = (messageId) => {
