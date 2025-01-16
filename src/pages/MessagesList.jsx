@@ -9,7 +9,7 @@ import { capitalize } from '../utils/helpers';
 import Spinner from '../components/Spinner';
 
 const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory  }) => {
-  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeCategory, setActiveCategory] = useState('all');
   const [copiedMessageId, setCopiedMessageId] = useState(null); // Store the copied message's ID
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState(null);
@@ -18,8 +18,10 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Wait for both fetch operations to complete
-        await Promise.all([fetchAllMessages(), fetchCategories()]);
+        await Promise.all([fetchCategories()]);
+        if (activeCategory === 'all') {
+          await fetchAllMessages();
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
