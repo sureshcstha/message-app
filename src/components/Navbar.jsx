@@ -23,11 +23,11 @@ const Navbar = () => {
                 <NavLink to='/' className={linkClass}>
                   Home
                 </NavLink>
-                {/* <NavLink to='/jobs' className={linkClass}>
-                  Jobs
-                </NavLink> */}
                 <NavLink to='/random-message' className={linkClass}>
                   Random Message
+                </NavLink>
+                <NavLink to='/admin' className={linkClass}>
+                  Content Management
                 </NavLink>
               </div>
             </div>
