@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 
 const EditMessage = ({ fetchMessageById, categories, fetchCategories, updateMessage }) => {
@@ -10,6 +10,7 @@ const EditMessage = ({ fetchMessageById, categories, fetchCategories, updateMess
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCategories(); // Fetch categories on component mount
@@ -62,12 +63,12 @@ const EditMessage = ({ fetchMessageById, categories, fetchCategories, updateMess
     <div className='pt-20'>
       <section>
         <div className='container m-auto py-6 px-6'>
-          <Link
-            to='/'
+          <button
+            onClick={() => navigate(-1)}
             className='text-indigo-500 hover:text-indigo-600 flex items-center'
           >
             <FaArrowLeft className='mr-2' />Go Back 
-          </Link>
+          </button>
         </div>
       </section>
       <div className="p-4 max-w-md mx-auto bg-white shadow-md rounded-md">

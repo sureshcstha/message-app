@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { MdOutlineMessage } from "react-icons/md";
 import { capitalize } from '../utils/helpers';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 
 const RandomMessage = ({ fetchRandomMessage }) => {
   const [randomMessage, setRandomMessage] = useState(null);
+  const navigate = useNavigate();
 
   // Fetch a random message on page load
   useEffect(() => {
@@ -26,12 +27,12 @@ const RandomMessage = ({ fetchRandomMessage }) => {
     <div className='pt-20'>
         <section>
             <div className='container m-auto py-6 px-6'>
-            <Link
-                to='/'
+            <button
+                onClick={() => navigate(-1)}
                 className='text-indigo-500 hover:text-indigo-600 flex items-center'
             >
                 <FaArrowLeft className='mr-2' />Go Back 
-            </Link>
+            </button>
             </div>
         </section>
         <div className="p-6 max-w-md mx-auto bg-gray-100 rounded-xl shadow-md space-y-4">

@@ -26,8 +26,8 @@ const Navbar = () => {
                 {/* <NavLink to='/jobs' className={linkClass}>
                   Jobs
                 </NavLink> */}
-                <NavLink to='/add' className={linkClass}>
-                  Add Message
+                <NavLink to='/random-message' className={linkClass}>
+                  Random Message
                 </NavLink>
               </div>
             </div>

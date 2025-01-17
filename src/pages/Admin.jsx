@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import { capitalize } from '../utils/helpers';
 import Spinner from '../components/Spinner';
 
-const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory  }) => {
+const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory  }) => {
   const [activeCategory, setActiveCategory] = useState(() => {
     return localStorage.getItem('activeCategory') || 'all'; // Default to 'all' if no value in local storage
   });
@@ -95,6 +95,12 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
     <div className="container mx-auto p-4 pt-24">
       <div className="mb-4 flex items-center space-x-4">
         <Link
+          to="/admin/add"
+          className="bg-blue-500 text-white px-3 py-1 text-sm rounded-lg hover:bg-blue-600"
+        >
+          Add New Message
+        </Link>
+        <Link
           to="/random-message"
           className="bg-blue-500 text-white px-3 py-1 text-sm rounded-lg hover:bg-blue-600"
         >
@@ -127,8 +133,6 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
             copiedMessageId={copiedMessageId}
             openModal={openModal}
             handleCopy={handleCopy}
-            showEdit={false}
-            showDelete={false}
         />
         ))}
       </ul>
@@ -150,4 +154,4 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
   );
 };
 
-export default MessagesList;
+export default Admin;
