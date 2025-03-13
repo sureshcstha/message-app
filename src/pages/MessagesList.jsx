@@ -7,8 +7,9 @@ import CategoryList from '../components/CategoryList';
 import { toast } from 'react-toastify';
 import { capitalize } from '../utils/helpers';
 import Spinner from '../components/Spinner';
+import Pagination from '../components/Pagination';
 
-const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory  }) => {
+const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory, totalPages }) => {
   const [activeCategory, setActiveCategory] = useState(() => {
     return localStorage.getItem('activeCategory') || 'all'; // Default to 'all' if no value in local storage
   });
@@ -16,13 +17,15 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         await Promise.all([fetchCategories()]);
         if (activeCategory === 'all') {
-          await fetchAllMessages();
+          await fetchAllMessages(currentPage);
         } else {
           await fetchMessagesByCategory(activeCategory);
         }
@@ -34,16 +37,24 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
     };
   
     fetchData();
-  }, [fetchAllMessages, fetchCategories, activeCategory, fetchMessagesByCategory]);
+  }, [fetchAllMessages, fetchCategories, activeCategory, fetchMessagesByCategory, currentPage]);
 
   const handleCategoryClick = (category) => {
+    setCurrentPage(1); // Reset page number to 1 when changing category
+
     if (category === 'all') {
-      fetchAllMessages(); // Fetch all messages if 'All' is clicked
+      fetchAllMessages(1); // Fetch all messages if 'All' is clicked
     } else {
       fetchMessagesByCategory(category); // Fetch messages for the selected category
     }
     setActiveCategory(category);
     localStorage.setItem('activeCategory', category); // Save category to local storage
+  };
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
   };
 
   const openModal = (messageId) => {
@@ -119,19 +130,22 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
         {categoryHeading}
       </h1>
       {messages.length > 0 ? (
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {messages.map((message) => (
-          <MessageCard
-            key={message._id}
-            message={message}
-            copiedMessageId={copiedMessageId}
-            openModal={openModal}
-            handleCopy={handleCopy}
-            showEdit={false}
-            showDelete={false}
-        />
-        ))}
-      </ul>
+        <div>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {messages.map((message) => (
+              <MessageCard
+                key={message._id}
+                message={message}
+                copiedMessageId={copiedMessageId}
+                openModal={openModal}
+                handleCopy={handleCopy}
+                showEdit={false}
+                showDelete={false}
+            />
+            ))}
+          </ul>
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+        </div>
       ) : (
         <p className="text-gray-500 italic">No messages found for this category.</p>
       )}

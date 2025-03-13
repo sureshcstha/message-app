@@ -1,9 +1,11 @@
 import { useState, useCallback  } from 'react';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const PAGINATION_LIMIT = import.meta.env.VITE_PAGINATION_LIMIT || 30;
 
 const useMessages = () => {
   const [messages, setMessages] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
   const [categories, setCategories] = useState([]);
 
   // common fetch logic
@@ -21,22 +23,24 @@ const useMessages = () => {
   };
 
   // Fetch all messages
-  const fetchAllMessages = useCallback(async () => {
+  const fetchAllMessages = useCallback(async (page = 1) => {
     try {
-      const messages = await fetchData(`${API_BASE_URL}/messages`);
+      const messages = await fetchData(`${API_BASE_URL}/messages?page=${page}&limit=${PAGINATION_LIMIT}`);
       setMessages(messages.data || []);
       // console.log('Fetched messages:', messages);
+      setTotalPages(messages.pagination?.totalPages || 1);
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
   }, []);
 
   // Fetch all messages by a category
-  const fetchMessagesByCategory = useCallback(async (category) => {
+  const fetchMessagesByCategory = useCallback(async (category, page = 1) => {
     try {
-      const messages = await fetchData(`${API_BASE_URL}/messages?category=${category}`);
+      const messages = await fetchData(`${API_BASE_URL}/messages?category=${category}&page=${page}&limit=${PAGINATION_LIMIT}`);
       setMessages(messages.data || []);
       // console.log(`Fetched messages for category "${category}":`, messages);
+      setTotalPages(messages.pagination?.totalPages || 1);
     } catch (error) {
       console.error(`Error fetching messages for category "${category}":`, error);
     }
@@ -112,7 +116,7 @@ const useMessages = () => {
     }
   }, [fetchAllMessages]);
 
-  return { messages, fetchAllMessages, categories, fetchCategories, fetchMessagesByCategory, fetchRandomMessage, createMessage, fetchMessageById, updateMessage, deleteMessage };
+  return { messages, fetchAllMessages, categories, fetchCategories, fetchMessagesByCategory, fetchRandomMessage, createMessage, fetchMessageById, updateMessage, deleteMessage, totalPages };
 };
 
 export default useMessages;
