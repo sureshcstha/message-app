@@ -10,10 +10,16 @@ const EditMessage = ({ fetchMessageById, categories, fetchCategories, updateMess
   const [selectedCategory, setSelectedCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [localCategories, setLocalCategories] = useState(categories || []);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchCategories(); // Fetch categories on component mount
+    const cachedCategories = localStorage.getItem('categories');
+    if (cachedCategories) {
+      setLocalCategories(JSON.parse(cachedCategories));
+    } else {
+      fetchCategories();
+    }
 
     const fetchMessage = async () => {
       try {
@@ -27,6 +33,13 @@ const EditMessage = ({ fetchMessageById, categories, fetchCategories, updateMess
 
     if (messageId) fetchMessage();
   }, [fetchCategories, fetchMessageById, messageId]);
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      setLocalCategories(categories);
+      localStorage.setItem('categories', JSON.stringify(categories));
+    }
+  }, [categories]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -102,7 +115,7 @@ const EditMessage = ({ fetchMessageById, categories, fetchCategories, updateMess
               className="w-full p-2 border border-gray-300 rounded-md"
             >
               <option value="">Select a category</option>
-              {categories.map((category, index) => (
+              {localCategories.map((category, index) => (
                 <option key={index} value={category}>
                   {category}
                 </option>

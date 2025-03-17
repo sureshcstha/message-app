@@ -48,9 +48,16 @@ const useMessages = () => {
 
   // Fetch all categories
   const fetchCategories = useCallback(async () => {
+    const cachedCategories = localStorage.getItem('categories');
+    if (cachedCategories) {
+      setCategories(JSON.parse(cachedCategories));
+      return;
+    }
+    
     try {
       const categories = await fetchData(`${API_BASE_URL}/messages/categories`);
       setCategories(categories.data || []);
+      localStorage.setItem('categories', JSON.stringify(categories.data)); // Cache categories
       // console.log('Fetched categories:', categories);
     } catch (error) {
       console.error('Error fetching categories:', error);
