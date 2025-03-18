@@ -19,11 +19,15 @@ const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCat
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Fetch categories once on mount
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        await Promise.all([fetchCategories()]);
         if (activeCategory === 'all') {
           await fetchAllMessages(currentPage);
         } else {
@@ -37,7 +41,7 @@ const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCat
     };
   
     fetchData();
-  }, [fetchAllMessages, fetchCategories, activeCategory, fetchMessagesByCategory, currentPage]);
+  }, [fetchAllMessages, activeCategory, fetchMessagesByCategory, currentPage]);
 
   const handleCategoryClick = (category) => {
     setCurrentPage(1); // Reset page number to 1 when changing category
