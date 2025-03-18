@@ -145,6 +145,7 @@ const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCat
                 copiedMessageId={copiedMessageId}
                 openModal={openModal}
                 handleCopy={handleCopy}
+                showCopy={false}
             />
             ))}
           </ul>

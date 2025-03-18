@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-const MessageCard = ({ message, copiedMessageId, openModal, handleCopy, showEdit = true, showDelete = true, }) => {
+const MessageCard = ({ message, copiedMessageId, openModal, handleCopy, showEdit = true, showDelete = true, showCopy = true }) => {
   return (
     <li className="bg-white p-4 rounded-lg shadow-md flex flex-col space-y-4">
       <p className="text-lg">{message.message}</p>
@@ -25,12 +25,14 @@ const MessageCard = ({ message, copiedMessageId, openModal, handleCopy, showEdit
           )}
         </div>
 
-        <button
-          onClick={() => handleCopy(message.message, message._id)}
-          className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-        >
-          {copiedMessageId === message._id ? 'Copied!' : 'Copy'}
-        </button>
+          {showCopy && (
+            <button
+              onClick={() => handleCopy(message.message, message._id)}
+              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+            >
+              {copiedMessageId === message._id ? 'Copied!' : 'Copy'}
+            </button>
+          )}
       </div>
     </li>
   );
