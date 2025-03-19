@@ -18,11 +18,17 @@ const login = async (userData) => {
   return response.data;
 };
 
+// Forgot password
+const forgotPassword = async (email) => {
+    const response = await axios.post(API_URL + "forgot-password", { email });
+    return response.data;
+};
+
 // Logout user
 const logout = () => {
   localStorage.removeItem("user");
 };
 
-const authService = { signup, login, logout };
+const authService = { signup, login, forgotPassword, logout };
 
 export default authService;
