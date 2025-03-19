@@ -1,7 +1,16 @@
 import { NavLink } from 'react-router-dom';
 import logo from '../assets/logo.png';
+import { useSelector, useDispatch } from 'react-redux';
+import { logoutUser } from '../features/auth/authSlice';
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
+  
   const linkClass = ({ isActive }) =>
     isActive
       ? 'bg-black text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'
@@ -26,9 +35,18 @@ const Navbar = () => {
                 <NavLink to='/random-message' className={linkClass}>
                   Random Message
                 </NavLink>
-                <NavLink to='/admin' className={linkClass}>
-                  Content Management
-                </NavLink>
+                {user ? (
+                  <button
+                    onClick={handleLogout}
+                    className='text-white bg-red-600 hover:bg-red-700 rounded-md px-3 py-2'
+                  >
+                    Logout
+                  </button>
+                ) : (
+                  <NavLink to='/login' className={linkClass}>
+                    Login
+                  </NavLink>
+                )}
               </div>
             </div>
           </div>
