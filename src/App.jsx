@@ -10,6 +10,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import useMessages from './hooks/useMessages';
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   const messageAPI = useMessages();
@@ -19,9 +20,9 @@ const App = () => {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<MessagesList {...messageAPI} />} />
-          <Route path="/admin" element={<Admin {...messageAPI} />} />
-          <Route path="/admin/add" element={<AddMessage {...messageAPI} />} />
-          <Route path="/admin/edit/:messageId" element={<EditMessage {...messageAPI} />} />
+          <Route path="/admin" element={<ProtectedRoute element={<Admin {...messageAPI} />} allowedRoles={["editor", "admin", "superadmin"]} />} />
+          <Route path="/admin/add" element={<ProtectedRoute element={<AddMessage {...messageAPI} />} allowedRoles={["contributor", "editor", "admin", "superadmin"]} />} />
+          <Route path="/admin/edit/:messageId" element={<ProtectedRoute element={<EditMessage {...messageAPI} />} allowedRoles={["editor", "admin", "superadmin"]} />} />
           <Route path="/random-message" element={<RandomMessage fetchRandomMessage={messageAPI.fetchRandomMessage} />} />
         </Route>
         <Route path="/signup" element={<Signup />} />

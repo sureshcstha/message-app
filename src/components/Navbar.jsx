@@ -35,6 +35,12 @@ const Navbar = () => {
                 <NavLink to='/random-message' className={linkClass}>
                   Random Message
                 </NavLink>
+                {user && (user.role === "editor" || user.role === "admin" || user.role === "superadmin") && (
+                  <NavLink to="/admin" className={linkClass}>
+                    Content Management
+                  </NavLink>
+                )}
+
                 {user ? (
                   <button
                     onClick={handleLogout}
@@ -43,7 +49,7 @@ const Navbar = () => {
                     Logout
                   </button>
                 ) : (
-                  <NavLink to='/login' className={linkClass}>
+                  <NavLink to='/login' className='text-white bg-red-600 hover:bg-red-700 rounded-md px-3 py-2'>
                     Login
                   </NavLink>
                 )}
