@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { capitalize } from '../utils/helpers';
 import Spinner from '../components/Spinner';
 import Pagination from '../components/Pagination';
+import { useSelector } from 'react-redux';
 
 const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory, totalPages }) => {
   const [activeCategory, setActiveCategory] = useState(() => {
@@ -18,6 +19,7 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
   const [messageToDelete, setMessageToDelete] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const user = useSelector((state) => state.auth?.user);
 
   // Fetch categories once on mount
   useEffect(() => {
@@ -109,6 +111,14 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
   return (
     <div className="container mx-auto p-4 pt-24">
       <div className="mb-4 flex items-center space-x-4">
+      {user && (user.role === "contributor" || user.role === "editor" || user.role === "admin" || user.role === "superadmin") && (
+        <Link
+          to="/admin/add"
+          className="bg-blue-500 text-white px-3 py-1 text-sm rounded-lg hover:bg-blue-600"
+        >
+          Add New Message
+        </Link>
+      )}
         <Link
           to="/random-message"
           className="bg-blue-500 text-white px-3 py-1 text-sm rounded-lg hover:bg-blue-600"
