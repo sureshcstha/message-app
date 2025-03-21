@@ -20,11 +20,17 @@ const App = () => {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<MessagesList {...messageAPI} />} />
-          <Route path="/admin" element={<ProtectedRoute element={<Admin {...messageAPI} />} allowedRoles={["editor", "admin", "superadmin"]} />} />
-          <Route path="/admin/add" element={<ProtectedRoute element={<AddMessage {...messageAPI} />} allowedRoles={["contributor", "editor", "admin", "superadmin"]} />} />
-          <Route path="/admin/edit/:messageId" element={<ProtectedRoute element={<EditMessage {...messageAPI} />} allowedRoles={["editor", "admin", "superadmin"]} />} />
+          {/* Protected Routes */}
+          <Route element={<ProtectedRoute allowedRoles={["editor", "admin", "superadmin"]} />}>
+            <Route path="/admin" element={<Admin {...messageAPI} />} />
+            <Route path="/admin/edit/:messageId" element={<EditMessage {...messageAPI} />} />
+          </Route>
+          <Route element={<ProtectedRoute allowedRoles={["contributor", "editor", "admin", "superadmin"]} />}>
+            <Route path="/admin/add" element={<AddMessage {...messageAPI} />} />
+          </Route>
           <Route path="/random-message" element={<RandomMessage fetchRandomMessage={messageAPI.fetchRandomMessage} />} />
         </Route>
+        
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/password-reset" element={<ForgotPassword />} />

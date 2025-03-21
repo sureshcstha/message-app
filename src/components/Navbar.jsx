@@ -5,7 +5,7 @@ import { logoutUser } from '../features/auth/authSlice';
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.auth?.user);
 
   const handleLogout = () => {
     dispatch(logoutUser());
