@@ -5,6 +5,29 @@ const API_URL = `${API_BASE_URL}/users/`;
 
 axios.defaults.withCredentials = true; // Enables cookies in requests
 
+
+// Refresh token function
+const refreshAccessToken = async () => {
+  try {
+    const response = await axios.post(API_URL + "refresh-token");
+    return response.data;
+  } catch (error) {
+    console.error("Failed to refresh token", error);
+
+    // If refresh token is invalid or expired, log out the user
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      await logout(); 
+      window.location.reload(); 
+    }
+
+    throw error;
+  }
+};
+
+// Call this function every 29 minutes (before token expires)
+setInterval(refreshAccessToken, 29 * 60 * 1000);
+
+
 // Signup user
 const signup = async (userData) => {
     const response = await axios.post(API_URL + "signup", userData);
@@ -35,6 +58,6 @@ const logout = async () => {
   return response.data;
 };
 
-const authService = { signup, login, forgotPassword, resetPassword, logout };
+const authService = { signup, login, forgotPassword, resetPassword, logout, refreshAccessToken };
 
 export default authService;

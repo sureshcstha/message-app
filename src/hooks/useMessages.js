@@ -11,7 +11,10 @@ const useMessages = () => {
   // common fetch logic
   const fetchData = async (url, options = {}) => {
     try {
-      const response = await fetch(url, options);
+      const response = await fetch(url, {
+        ...options,
+        credentials: 'include', // Ensures cookies are sent with the request
+      });
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }

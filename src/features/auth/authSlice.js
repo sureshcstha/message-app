@@ -74,6 +74,20 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+// Async thunk for token refresh
+export const refreshToken = createAsyncThunk(
+  "auth/refreshToken",
+  async (_, thunkAPI) => {
+    try {
+      const response = await authService.refreshAccessToken();
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data?.error || "Token refresh failed");
+    }
+  }
+);
+
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -119,6 +133,22 @@ const authSlice = createSlice({
         state.user = action.payload.user;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      // Refresh Token Cases
+      .addCase(refreshToken.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.message = "";
+      })
+      .addCase(refreshToken.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+      })
+      .addCase(refreshToken.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
