@@ -29,13 +29,13 @@ const App = () => {
             <Route path="/admin/add" element={<AddMessage {...messageAPI} />} />
           </Route>
           <Route path="/random-message" element={<RandomMessage fetchRandomMessage={messageAPI.fetchRandomMessage} />} />
-        </Route>
-        
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/password-reset" element={<ForgotPassword />} />
 
-        <Route path="*" element={<NotFoundPage />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/password-reset" element={<ForgotPassword />} />
+
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
       </Routes>
     </Router>
   );
