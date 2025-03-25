@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { capitalize } from '../utils/helpers';
 import Spinner from '../components/Spinner';
 import Pagination from '../components/Pagination';
+import { useSelector } from 'react-redux';
 
 const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory, totalPages }) => {
   const [activeCategory, setActiveCategory] = useState(() => {
@@ -19,6 +20,7 @@ const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCat
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('published');
   const [currentPage, setCurrentPage] = useState(1);
+  const user = useSelector((state) => state.auth?.user);
 
   // Fetch categories once on mount
   useEffect(() => {
@@ -68,6 +70,11 @@ const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCat
   };
 
   const handleDelete = () => {
+    if (!user || user.role !== 'superadmin') {
+      toast.error('Unauthorized action.');
+      return;
+    }
+    
     if (messageToDelete) {
       deleteMessage(messageToDelete);
       toast.success('Message deleted successfully.', {
@@ -163,6 +170,7 @@ const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCat
                 openModal={openModal}
                 handleCopy={handleCopy}
                 showCopy={false}
+                user={user}
             />
             ))}
           </ul>

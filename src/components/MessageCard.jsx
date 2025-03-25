@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-const MessageCard = ({ message, copiedMessageId, openModal, handleCopy, showEdit = true, showDelete = true, showCopy = true }) => {
+const MessageCard = ({ message, copiedMessageId, openModal, handleCopy, showEdit = true, showDelete = true, showCopy = true, user }) => {
   return (
     <li className="bg-white p-4 rounded-lg shadow-md flex flex-col space-y-4">
       <p className="text-lg">{message.message}</p>
@@ -15,7 +15,7 @@ const MessageCard = ({ message, copiedMessageId, openModal, handleCopy, showEdit
               Edit
             </Link>
           )}
-          {showDelete && (
+          {user?.role === "superadmin" && showDelete && (
             <button
               onClick={() => openModal(message._id)}
               className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
