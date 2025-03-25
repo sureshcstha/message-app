@@ -17,6 +17,7 @@ const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCat
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState('published');
   const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch categories once on mount
@@ -29,9 +30,9 @@ const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCat
       setIsLoading(true);
       try {
         if (activeCategory === 'all') {
-          await fetchAllMessages(currentPage);
+          await fetchAllMessages(currentPage, statusFilter);
         } else {
-          await fetchMessagesByCategory(activeCategory);
+          await fetchMessagesByCategory(activeCategory, currentPage, statusFilter);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -41,7 +42,7 @@ const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCat
     };
   
     fetchData();
-  }, [fetchAllMessages, activeCategory, fetchMessagesByCategory, currentPage]);
+  }, [fetchAllMessages, activeCategory, fetchMessagesByCategory, currentPage, statusFilter]);
 
   const handleCategoryClick = (category) => {
     setCurrentPage(1); // Reset page number to 1 when changing category
@@ -134,6 +135,18 @@ const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCat
         ) : (
           <p className="text-gray-500 italic">No categories available.</p>
         )}
+      </div>
+
+      <div className="mb-4">
+        <label className="mr-2 font-semibold">Sort by</label>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="border px-2 py-1 rounded-md"
+        >
+          <option value="published">Published</option>
+          <option value="draft">Draft</option>
+        </select>
       </div>
 
       <h1 className="text-2xl font-semibold mb-6">

@@ -26,9 +26,9 @@ const useMessages = () => {
   };
 
   // Fetch all messages
-  const fetchAllMessages = useCallback(async (page = 1) => {
+  const fetchAllMessages = useCallback(async (page = 1, status = 'published') => {
     try {
-      const messages = await fetchData(`${API_BASE_URL}/messages?page=${page}&limit=${PAGINATION_LIMIT}`);
+      const messages = await fetchData(`${API_BASE_URL}/messages?status=${status}&page=${page}&limit=${PAGINATION_LIMIT}`);
       setMessages(messages.data || []);
       // console.log('Fetched messages:', messages);
       setTotalPages(messages.pagination?.totalPages || 1);
@@ -38,9 +38,9 @@ const useMessages = () => {
   }, []);
 
   // Fetch all messages by a category
-  const fetchMessagesByCategory = useCallback(async (category, page = 1) => {
+  const fetchMessagesByCategory = useCallback(async (category, page = 1, status = 'published') => {
     try {
-      const messages = await fetchData(`${API_BASE_URL}/messages?category=${category}&page=${page}&limit=${PAGINATION_LIMIT}`);
+      const messages = await fetchData(`${API_BASE_URL}/messages?category=${category}&status=${status}&page=${page}&limit=${PAGINATION_LIMIT}`);
       setMessages(messages.data || []);
       // console.log(`Fetched messages for category "${category}":`, messages);
       setTotalPages(messages.pagination?.totalPages || 1);
