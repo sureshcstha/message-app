@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -83,6 +85,7 @@ const Login = () => {
           </a>
         </p>
       </div>
+      <ToastContainer />
     </div>
   );
 };
