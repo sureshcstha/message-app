@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/auth/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 
 const Login = () => {
@@ -72,15 +72,15 @@ const Login = () => {
 
         <p className="text-sm text-center mt-4">
           Don&apos;t have an account?{" "}
-          <a href="/signup" className="text-blue-500 hover:underline">
+          <Link to="/signup" className="text-blue-500 hover:underline">
             Sign up
-          </a>
+          </Link>
         </p>
         <p className="text-sm text-center mt-4">
           Forgot your password?{" "}
-          <a href="/password-reset" className="text-blue-500 hover:underline">
+          <Link to="/password-reset" className="text-blue-500 hover:underline">
             Reset it
-          </a>
+          </Link>
         </p>
       </div>
     </div>
