@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../features/auth/authSlice";
+import { loginUser, reset } from "../features/auth/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 
@@ -13,6 +13,11 @@ const Login = () => {
   const { isLoading, isError, message } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Reset the auth state when the Login component mounts
+  useEffect(() => {
+    dispatch(reset());
+  }, [dispatch]);
 
   // Check if email is verified from the URL query parameter
   useEffect(() => {
@@ -78,7 +83,7 @@ const Login = () => {
         </p>
         <p className="text-sm text-center mt-4">
           Forgot your password?{" "}
-          <Link to="/password-reset" className="text-blue-500 hover:underline">
+          <Link to="/forgot-password" className="text-blue-500 hover:underline">
             Reset it
           </Link>
         </p>

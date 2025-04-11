@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { forgotPassword } from "../features/auth/authSlice";
+import { forgotPassword, reset } from "../features/auth/authSlice";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const dispatch = useDispatch();
   const { isLoading, isSuccess, isError, message } = useSelector((state) => state.auth);
+
+  // Reset the auth state when the ForgotPassword component mounts
+  useEffect(() => {
+    dispatch(reset());
+  }, [dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

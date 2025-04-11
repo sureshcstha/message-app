@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import { signupUser } from "../features/auth/authSlice"; 
+import { signupUser, reset } from "../features/auth/authSlice"; 
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -16,12 +16,20 @@ const Signup = () => {
   const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
+  // Reset auth state when the component mounts
+  useEffect(() => {
+    dispatch(reset());
+  }, [dispatch]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    dispatch(reset());
 
     // Check if passwords match before submitting
     if (formData.password !== formData.confirmPassword) {
