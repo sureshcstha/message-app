@@ -54,7 +54,7 @@ const resetPassword = async (token, newPassword) => {
 
 // Change password
 const changePassword = async (email, currentPassword, newPassword) => {
-  const response = await axios.post(API_URL + "change-password", { email, currentPassword, newPassword });
+  const response = await axios.put(API_URL + "change-password", { email, currentPassword, newPassword });
   return response.data;
 };
 
