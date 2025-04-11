@@ -10,6 +10,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import ChangePassword from './pages/ChangePassword';
 import UserProfile from './pages/UserProfile';
 import useMessages from './hooks/useMessages';
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -35,9 +36,10 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/change-password" element={<ChangePassword />} />
           <Route path="/password-reset/:token" element={<ResetPassword />} />
 
-          <Route element={<ProtectedRoute allowedRoles={[]} />}>
+          <Route element={<ProtectedRoute allowedRoles={["guest", "contributor", "editor", "admin", "superadmin"]} />}>
             <Route path="/profile" element={<UserProfile />} />
           </Route>
 

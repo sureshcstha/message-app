@@ -61,6 +61,19 @@ export const resetPassword = createAsyncThunk(
   }
 );
 
+// Async thunk for changing password
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async ({ email, currentPassword, newPassword }, thunkAPI) => {
+    try {
+      const response = await authService.changePassword(email, currentPassword, newPassword);
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response?.data?.error || "Password change failed");
+    }
+  }
+);
+
 // Async thunk for logout
 export const logoutUser = createAsyncThunk(
   "auth/logout", 
@@ -181,6 +194,22 @@ const authSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(resetPassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      // Change Password Cases
+      .addCase(changePassword.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.message = "";
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.message = action.payload.message;
+      })
+      .addCase(changePassword.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

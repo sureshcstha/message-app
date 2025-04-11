@@ -1,15 +1,10 @@
 import { NavLink } from 'react-router-dom';
 import logo from '../assets/logo.png';
-import { useSelector, useDispatch } from 'react-redux';
-import { logoutUser } from '../features/auth/authSlice';
+import { useSelector } from 'react-redux';
+import { IoPersonCircleSharp } from "react-icons/io5";
 
 const Navbar = () => {
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth?.user);
-
-  const handleLogout = () => {
-    dispatch(logoutUser());
-  };
   
   const linkClass = ({ isActive }) =>
     isActive
@@ -22,7 +17,7 @@ const Navbar = () => {
         <div className='flex h-20 items-center justify-between'>
           <div className='flex flex-1 items-center justify-center md:items-stretch md:justify-start'>
             <NavLink className='flex flex-shrink-0 items-center mr-4' to='/'>
-              <img className='h-10 w-auto' src={logo} alt='React Jobs' />
+              <img className='h-10 w-auto' src={logo} alt='React logo' />
               <span className='hidden md:block text-white text-2xl font-bold ml-2'>
                 HeartNotes
               </span>
@@ -35,19 +30,19 @@ const Navbar = () => {
                 <NavLink to='/random-message' className={linkClass}>
                   Random Message
                 </NavLink>
-                {user && (user.role === "editor" || user.role === "admin" || user.role === "superadmin") && (
+                {/* {user && (user.role === "editor" || user.role === "admin" || user.role === "superadmin") && (
                   <NavLink to="/admin" className={linkClass}>
                     Content Management
                   </NavLink>
-                )}
+                )} */}
 
                 {user ? (
-                  <button
-                    onClick={handleLogout}
-                    className='text-white bg-red-600 hover:bg-red-700 rounded-md px-3 py-2'
-                  >
-                    Logout
-                  </button>
+                  <NavLink
+                  to='/profile'
+                  className='flex items-center justify-center text-4xl text-white'
+                >
+                  <IoPersonCircleSharp />
+                </NavLink>
                 ) : (
                   <NavLink to='/login' className='text-white bg-red-600 hover:bg-red-700 rounded-md px-3 py-2'>
                     Login
