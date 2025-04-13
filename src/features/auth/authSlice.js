@@ -6,6 +6,7 @@ const initialState = {
   isLoading: false,
   isSuccess: false,
   isError: false,
+  passwordChanged: false,
   message: "",
 };
 
@@ -109,6 +110,7 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = false;
       state.isError = false;
+      state.passwordChanged = false;
       state.message = "";
     },
   },
@@ -208,6 +210,8 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.message = action.payload.message;
+        state.passwordChanged = true;
+        state.user = null; 
       })
       .addCase(changePassword.rejected, (state, action) => {
         state.isLoading = false;

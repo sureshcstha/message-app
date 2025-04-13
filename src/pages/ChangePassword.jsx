@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { changePassword, reset } from "../features/auth/authSlice";
+import { changePassword, logoutUser, reset } from "../features/auth/authSlice";
 import { toast } from 'react-toastify';
 
 const ChangePassword = () => {
@@ -12,11 +12,10 @@ const ChangePassword = () => {
   });
 
   const [error, setError] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, isLoading, isSuccess, isError, message } = useSelector((state) => state.auth);
+  const { user, isLoading, isError, message, passwordChanged } = useSelector((state) => state.auth);
   const email = user?.email; 
 
   useEffect(() => {
@@ -36,6 +35,11 @@ const ChangePassword = () => {
       return;
     }
 
+    if (!formData.currentPassword || !formData.newPassword || !formData.confirmPassword) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
     if (formData.newPassword !== formData.confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -46,15 +50,17 @@ const ChangePassword = () => {
   };
 
   useEffect(() => {
-    if (isSuccess) {
-        toast.success("Password update successful!");
-        setShowSuccess(true);
+    if (passwordChanged) {
+        toast.success("Your password has been changed. Please log in.");
+
+        setFormData({ currentPassword: "", newPassword: "", confirmPassword: "" });
 
         setTimeout(() => {
-            navigate("/login");
-        }, 3000); 
-    }
-  }, [isSuccess, navigate]);
+          dispatch(logoutUser());
+          navigate("/login");
+        }, 5000); 
+      }
+  }, [passwordChanged, dispatch, navigate]);
 
 
   return (
@@ -62,7 +68,7 @@ const ChangePassword = () => {
       <div className="bg-white p-8 rounded-xl shadow-md w-96">
         <h2 className="text-xl font-bold mb-4">Update Password</h2>
 
-        {showSuccess && (
+        {passwordChanged && (
           <p className="text-green-600 text-sm mb-4">
             ✅ Password update successful! Redirecting to login...
           </p>
@@ -109,7 +115,7 @@ const ChangePassword = () => {
 
           <button
             type="submit"
-            disabled={isLoading || showSuccess}
+            disabled={isLoading}
             className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
           >
             {isLoading ? "Updating..." : "Update Password"}
