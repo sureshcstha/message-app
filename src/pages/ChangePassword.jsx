@@ -58,7 +58,7 @@ const ChangePassword = () => {
         setTimeout(() => {
           dispatch(logoutUser());
           navigate("/login");
-        }, 5000); 
+        }, 3000); 
       }
   }, [passwordChanged, dispatch, navigate]);
 
@@ -70,7 +70,7 @@ const ChangePassword = () => {
 
         {passwordChanged && (
           <p className="text-green-600 text-sm mb-4">
-            ✅ Password update successful! Redirecting to login...
+            ✅ Redirecting to login in 3 seconds...
           </p>
         )}
 
