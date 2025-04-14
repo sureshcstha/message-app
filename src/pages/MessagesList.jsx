@@ -10,7 +10,7 @@ import Spinner from '../components/Spinner';
 import Pagination from '../components/Pagination';
 import { useSelector } from 'react-redux';
 
-const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory, totalPages }) => {
+const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory, totalPages, toggleLikeMessage }) => {
   const [activeCategory, setActiveCategory] = useState(() => {
     return localStorage.getItem('activeCategory') || 'all'; // Default to 'all' if no value in local storage
   });
@@ -155,6 +155,8 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
                 handleCopy={handleCopy}
                 showEdit={false}
                 showDelete={false}
+                toggleLikeMessage={toggleLikeMessage}
+                user={user}
             />
             ))}
           </ul>

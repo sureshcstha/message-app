@@ -114,6 +114,20 @@ const useMessages = () => {
     }
   }, [fetchAllMessages]);
 
+  // Toggle like message
+  const toggleLikeMessage = useCallback(async (id) => {
+    try {
+      const updated = await fetchData(`${API_BASE_URL}/messages/message/${id}/like`, {
+        method: 'PATCH',
+      });
+      setMessages(prev =>
+        prev.map(msg => msg._id === id ? updated : msg)
+      );
+    } catch (error) {
+      console.error('Error toggling like:', error);
+    }
+  }, []);
+
   // Delete
   const deleteMessage = useCallback(async (id) => {
     try {
@@ -126,7 +140,7 @@ const useMessages = () => {
     }
   }, [fetchAllMessages]);
 
-  return { messages, fetchAllMessages, categories, fetchCategories, fetchMessagesByCategory, fetchRandomMessage, createMessage, fetchMessageById, updateMessage, deleteMessage, totalPages };
+  return { messages, fetchAllMessages, categories, fetchCategories, fetchMessagesByCategory, fetchRandomMessage, createMessage, fetchMessageById, updateMessage, deleteMessage, toggleLikeMessage, totalPages };
 };
 
 export default useMessages;
