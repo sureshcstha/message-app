@@ -60,7 +60,7 @@ const Signup = () => {
 
         {isError && <p className="text-red-500 text-sm mb-3">{message}</p>}
         {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-        {isSuccess && <p className="text-green-500 text-sm mb-3">Signup successful! Please check your email.</p>}
+        {isSuccess && <p className="text-green-500 text-sm mb-3">✅ Signup successful! Please check your email to verify your account.</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input

@@ -22,8 +22,14 @@ const Login = () => {
   // Check if email is verified from the URL query parameter
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has("verified")) {
+    const status = urlParams.get("status");
+
+    if (status === "verified") {
       toast.success("Your email has been successfully verified! You can now log in.");
+    } else if (status === "already_verified") {
+      toast.info("Your email is already verified. You can log in.");
+    } else if (status === "invalid") {
+      toast.error("The verification link is invalid or expired.");
     }
   }, []);
 
