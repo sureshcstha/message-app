@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { FaHeart, FaRegHeart, FaCopy, FaCheck } from 'react-icons/fa';
 
 const MessageCard = ({ message, copiedMessageId, openModal, handleCopy, showEdit = true, showDelete = true, showCopy = true, user, toggleLikeMessage }) => {
   const isLiked = message.hasLiked;
@@ -51,9 +51,19 @@ const MessageCard = ({ message, copiedMessageId, openModal, handleCopy, showEdit
           {showCopy && (
             <button
               onClick={() => handleCopy(message.message, message._id)}
-              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+              className="bg-sky-700 text-white px-2 py-2 rounded-lg hover:bg-sky-800 flex items-center"
             >
-              {copiedMessageId === message._id ? 'Copied!' : 'Copy'}
+              {copiedMessageId === message._id ? (
+                <>
+                  <FaCheck className="mr-1" />
+                  Copied
+                </>
+              ) : (
+                <>
+                  <FaCopy className="mr-1" />
+                  Copy
+                </>
+              )}
             </button>
           )}
       </div>
