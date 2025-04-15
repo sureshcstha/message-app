@@ -22,9 +22,9 @@ const MessageCard = ({ message, copiedMessageId, openModal, handleCopy, showEdit
               title={isLiked ? "Unlike" : "Like"}
             >
               {isLiked ? (
-                <FaHeart className="text-red-500 inline" />
+                <FaHeart className="text-red-500 inline text-xl" />
               ) : (
-                <FaRegHeart className="text-gray-400 inline" />
+                <FaRegHeart className="text-gray-400 inline text-xl" />
               )}
               <span className="ml-2">{message.likedBy.length}</span>
             </button>
