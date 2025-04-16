@@ -1,11 +1,15 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaRegHeart, FaCopy, FaCheck } from 'react-icons/fa';
 
 const MessageCard = ({ message, copiedMessageId, openModal, handleCopy, showEdit = true, showDelete = true, showCopy = true, user, toggleLikeMessage }) => {
   const isLiked = message.hasLiked;
+  const [isBouncing, setIsBouncing] = useState(false);
 
   const handleLikeClick = () => {
+    setIsBouncing(true);
     toggleLikeMessage(message._id);
+    setTimeout(() => setIsBouncing(false), 300);
   };
 
   return (
@@ -22,9 +26,9 @@ const MessageCard = ({ message, copiedMessageId, openModal, handleCopy, showEdit
               title={isLiked ? "Unlike" : "Like"}
             >
               {isLiked ? (
-                <FaHeart className="text-red-500 inline text-xl" />
+                <FaHeart className={`text-red-500 inline text-xl ${isBouncing ? 'animate-bounce-once' : ''}`} />
               ) : (
-                <FaRegHeart className="text-gray-400 inline text-xl" />
+                <FaRegHeart className={`text-gray-400 inline text-xl ${isBouncing ? 'animate-bounce-once' : ''}`} />
               )}
               <span className="ml-2">{message.likedBy.length}</span>
             </button>
