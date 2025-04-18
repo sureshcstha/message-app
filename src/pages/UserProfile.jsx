@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../features/auth/authSlice';
 import { Link } from 'react-router-dom';
 import { MdManageAccounts } from "react-icons/md";
+import { persistor } from "../app/store";
 
 function UserProfile() {
   const dispatch = useDispatch();
@@ -9,6 +10,7 @@ function UserProfile() {
 
   const handleLogout = () => {
     dispatch(logoutUser());
+    persistor.purge();
   };
 
   return (
