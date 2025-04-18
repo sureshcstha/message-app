@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
-import logo from '../assets/logo.png';
 import { useSelector } from 'react-redux';
 import { IoPersonCircleSharp } from "react-icons/io5";
+import { PiFlowerTulipDuotone } from "react-icons/pi";
 
 const Navbar = () => {
   const user = useSelector((state) => state.auth?.user);
@@ -17,9 +17,11 @@ const Navbar = () => {
         <div className='flex h-20 items-center justify-between'>
           <div className='flex flex-1 items-center justify-center md:items-stretch md:justify-start'>
             <NavLink className='flex flex-shrink-0 items-center mr-4' to='/'>
-              <img className='h-10 w-auto' src={logo} alt='React logo' />
+              <div className="bg-white rounded-full p-1">
+                <PiFlowerTulipDuotone className="text-red-500 text-4xl" />
+              </div>
               <span className='hidden md:block text-white text-2xl font-bold ml-2'>
-                HeartNotes
+                LuvNotes
               </span>
             </NavLink>
             <div className='md:ml-auto'>
