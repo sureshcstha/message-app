@@ -28,6 +28,63 @@ const refreshAccessToken = async () => {
 setInterval(refreshAccessToken, 29 * 60 * 1000);
 
 
+let isRefreshing = false;
+let failedQueue = [];
+
+// Process and reject all queued requests if token refresh fails
+const processQueue = (error) => {
+  failedQueue.forEach(prom => prom.reject(error));
+  failedQueue = [];
+};
+
+// --- Axios 401 Interceptor ---
+// Catches 401 errors, refreshes the access token, and retries the failed request once
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    // Prevent retrying authentication-related requests (login, signup, change-password, refresh)
+    const isAuthRequest =
+      originalRequest.url.includes("signup") ||
+      originalRequest.url.includes("login") ||
+      originalRequest.url.includes("change-password") ||
+      originalRequest.url.includes("refresh-token");
+
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthRequest) {
+      if (isRefreshing) {
+        // Queue the request until token refresh completes
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+        .then(() => axios(originalRequest)) // Retry the original request with the new token
+        .catch(err => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        await refreshAccessToken(); // Refresh the access token
+
+        // Resolve all queued requests after token is refreshed
+        failedQueue.forEach(prom => prom.resolve());
+        failedQueue = []; 
+
+        return axios(originalRequest); // Retry the original request
+      } catch (err) {
+        // Reject all queued requests if token refresh fails
+        processQueue(err);
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+
 // Signup user
 const signup = async (userData) => {
     const response = await axios.post(API_URL + "signup", userData);

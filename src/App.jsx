@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import MessagesList from './pages/MessagesList';
@@ -14,8 +15,21 @@ import ChangePassword from './pages/ChangePassword';
 import UserProfile from './pages/UserProfile';
 import useMessages from './hooks/useMessages';
 import ProtectedRoute from "./components/ProtectedRoute";
+import authService from "./features/auth/authService";
 
 const App = () => {
+  useEffect(() => {
+    const refreshOnLoad = async () => {
+      try {
+        await authService.refreshAccessToken();
+      } catch (err) {
+        console.error("Token refresh failed on load", err);
+      } 
+    };
+  
+    refreshOnLoad();
+  }, []);
+
   const messageAPI = useMessages();
 
   return (
