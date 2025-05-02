@@ -122,12 +122,11 @@ const authSlice = createSlice({
         state.isError = false;
         state.message = "";
       })
-      .addCase(signupUser.fulfilled, (state, action) => {
+      .addCase(signupUser.fulfilled, (state) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
         state.message = "";
-        state.user = action.payload;
       })
       .addCase(signupUser.rejected, (state, action) => {
         state.isLoading = false;
