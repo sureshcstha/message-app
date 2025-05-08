@@ -10,7 +10,7 @@ import Spinner from '../components/Spinner';
 import Pagination from '../components/Pagination';
 import { useSelector } from 'react-redux';
 
-const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory, totalPages }) => {
+const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCategories, fetchMessagesByCategory, totalPages, toggleLikeMessage }) => {
   const [activeCategory, setActiveCategory] = useState(() => {
     return localStorage.getItem('activeCategory') || 'all'; // Default to 'all' if no value in local storage
   });
@@ -170,6 +170,7 @@ const Admin = ({ messages, fetchAllMessages, deleteMessage, categories, fetchCat
                 openModal={openModal}
                 handleCopy={handleCopy}
                 showCopy={false}
+                toggleLikeMessage={toggleLikeMessage}
                 user={user}
             />
             ))}
