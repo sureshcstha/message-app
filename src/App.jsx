@@ -16,10 +16,15 @@ import UserProfile from './pages/UserProfile';
 import useMessages from './hooks/useMessages';
 import ProtectedRoute from "./components/ProtectedRoute";
 import authService from "./features/auth/authService";
+import { useSelector } from 'react-redux';
 
 const App = () => {
+  const user = useSelector((state) => state.auth?.user);
+
   useEffect(() => {
     const refreshOnLoadOrFocus = async () => {
+      if (!user) return;
+
       try {
         await authService.refreshAccessToken();
       } catch (err) {
