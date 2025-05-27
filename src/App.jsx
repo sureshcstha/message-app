@@ -19,7 +19,7 @@ import authService from "./features/auth/authService";
 
 const App = () => {
   useEffect(() => {
-    const refreshOnLoad = async () => {
+    const refreshOnLoadOrFocus = async () => {
       try {
         await authService.refreshAccessToken();
       } catch (err) {
@@ -27,7 +27,14 @@ const App = () => {
       } 
     };
   
-    refreshOnLoad();
+    refreshOnLoadOrFocus();
+
+    // Refresh whenever the tab/window becomes active
+    const handleFocus = () => refreshOnLoadOrFocus();
+    window.addEventListener("focus", handleFocus);
+
+    // Clean up the event listener when the component unmounts
+    return () => window.removeEventListener("focus", handleFocus);
   }, []);
 
   const messageAPI = useMessages();
