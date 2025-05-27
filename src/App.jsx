@@ -40,7 +40,7 @@ const App = () => {
 
     // Clean up the event listener when the component unmounts
     return () => window.removeEventListener("focus", handleFocus);
-  }, []);
+  }, [user]);
 
   const messageAPI = useMessages();
 
