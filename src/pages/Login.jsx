@@ -9,6 +9,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const { isLoading, isError, message } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -63,7 +64,7 @@ const Login = () => {
             required
           />
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
             value={formData.password}
@@ -71,6 +72,18 @@ const Login = () => {
             className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-200"
             required
           />
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="show-password"
+              checked={showPassword}
+              onChange={() => setShowPassword((prev) => !prev)}
+              className="form-checkbox"
+            />
+            <label htmlFor="show-password" className="text-sm text-gray-700">
+              Show password
+            </label>
+          </div>
 
           <button
             type="submit"
