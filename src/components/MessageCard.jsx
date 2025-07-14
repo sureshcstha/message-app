@@ -14,7 +14,9 @@ const MessageCard = ({ message, copiedMessageId, openModal, handleCopy, showEdit
 
   return (
     <li className="bg-white p-4 rounded-lg shadow-[0_0_20px_rgba(0,0,0,0.1)] flex flex-col space-y-4">
-      <p className="text-lg">{message.message}</p>
+      <p className="font-serif text-2xl sm:text-3xl text-center leading-relaxed">&ldquo;{message.message}&rdquo;</p>
+
+      <hr className="border-t border-gray-300" />
 
       <div className="flex justify-between items-center">
         <div className="flex space-x-4">

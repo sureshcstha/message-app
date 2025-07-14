@@ -145,7 +145,7 @@ const MessagesList = ({ messages, fetchAllMessages, deleteMessage, categories, f
       </h1>
       {messages.length > 0 ? (
         <div>
-          <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {messages.map((message) => (
               <MessageCard
                 key={message._id}
