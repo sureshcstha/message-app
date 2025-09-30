@@ -17,7 +17,7 @@ const ResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { token } = useParams();
-  const { isLoading, isSuccess, isError, message } = useSelector((state) => state.auth);
+  const { isLoading, isError, message, passwordChanged } = useSelector((state) => state.auth);
 
   useEffect(() => {
     // Reset state on component mount
@@ -41,7 +41,7 @@ const ResetPassword = () => {
   };
 
   useEffect(() => {
-    if (isSuccess) {
+    if (passwordChanged) {
         toast.success("Password reset successful!");
         setShowSuccess(true);
 
@@ -53,7 +53,7 @@ const ResetPassword = () => {
     if (isError && message?.toLowerCase().includes("token")) {
       setLinkInvalid(true);
     }
-  }, [isSuccess, isError, message, navigate]);
+  }, [passwordChanged, isError, message, navigate]);
 
   if (linkInvalid) {
     return (
