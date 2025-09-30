@@ -47,13 +47,14 @@ const ResetPassword = () => {
 
         setTimeout(() => {
             navigate("/login");
+            dispatch(reset());
         }, 3000); 
     }
 
     if (isError && message?.toLowerCase().includes("token")) {
       setLinkInvalid(true);
     }
-  }, [passwordChanged, isError, message, navigate]);
+  }, [passwordChanged, isError, message, navigate, dispatch]);
 
   if (linkInvalid) {
     return (
